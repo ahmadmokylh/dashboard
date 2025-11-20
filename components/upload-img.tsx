@@ -9,26 +9,36 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Trash } from 'lucide-react';
+import { useUploadThing } from '@/lib/uploadthing';
 
 interface Props {
   onUploaded: (url: string) => void;
 }
 
-const UploadImg: React.FC = () => {
+const UploadImg: React.FC<Props> = ({ onUploaded }) => {
   const [files, setFiles] = useState<File[] | undefined>();
   const [filePreview, setFilePreview] = useState<string | undefined>();
 
+  const { startUpload } = useUploadThing('imageUploader');
+
   const handleDrop = async (files: File[]) => {
-    console.log(files[0].name);
     setFiles(files);
+
+    // preview
     if (files.length > 0) {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (typeof e.target?.result === 'string') {
-          setFilePreview(e.target?.result);
+          setFilePreview(e.target.result);
         }
       };
       reader.readAsDataURL(files[0]);
+    }
+
+    // upload
+    const res = await startUpload(files);
+    if (res && res[0]?.url) {
+      onUploaded(res[0].url); // 👈 save image URL
     }
   };
 

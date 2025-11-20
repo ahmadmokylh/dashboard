@@ -1,6 +1,7 @@
 import z from 'zod';
 
 export const productSchema = z.object({
+  slug: z.string().min(2, 'اسم المنتج مطلوب'),
   name: z.string().min(2, 'اسم المنتج مطلوب'),
   description: z.string().min(5, 'الوصف مطلوب'),
   img: z.url('يجب أن يكون رابط صورة'),

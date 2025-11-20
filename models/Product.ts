@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const productSchema = new Schema(
   {
+    slug: { type: String, required: true, unique: true },
     name: { type: String, required: true, unique: true },
     description: { type: String, enum: [], default: [] },
     img: { type: String, required: true },

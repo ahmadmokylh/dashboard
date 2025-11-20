@@ -18,17 +18,41 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import UploadImg from './upload-img';
+import { toast } from 'sonner';
+import { ArSlug } from '@/lib/ar-sulg';
 
 export default function AddProductPage() {
   const form = useForm<ProdcctType>({
     resolver: zodResolver(productSchema),
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log('تم إرسال النموذج');
-    console.log(form.getValues());
+    const data = form.getValues();
+
+    try {
+      const res = await fetch('http://localhost:4000/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...data,
+          slug: ArSlug(data.name),
+        }),
+      });
+
+      if (!res.ok) {
+        console.error('Error:', await res.text());
+        return;
+      }
+
+      const result = await res.json();
+      toast('تم الرفع بنجاح', result);
+    } catch (error: any) {
+      toast('حدث خطأ اثناء الرفع', error);
+    }
   };
 
   return (
@@ -169,7 +193,7 @@ export default function AddProductPage() {
           </div>
 
           {/* =================== RIGHT SIDE (IMAGE) =================== */}
-          <UploadImg />
+          <UploadImg onUploaded={(url) => form.setValue('img', url)} />
         </div>
       </form>
     </div>
