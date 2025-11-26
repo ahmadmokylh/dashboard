@@ -1,7 +1,7 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { BadgeCheck, LogOut, Settings, ShieldUser } from 'lucide-react';
+import { BadgeCheck, Settings, ShieldUser } from 'lucide-react';
 
 import {
   DropdownMenuContent,
@@ -10,20 +10,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import LogoutBtn from './logout-btn';
 
 interface DropdownUserType {
-  name?: string;
-  email?: string;
-  avatar?: string;
   props?: React.ComponentProps<typeof DropdownMenuPrimitive.Content>;
 }
 
-export default function DropdownUser({
-  name = 'oamr',
-  email = 'test@email.com',
-  avatar,
-  props,
-}: DropdownUserType) {
+export default function DropdownUser({ props }: DropdownUserType) {
   return (
     <DropdownMenuContent
       className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -34,21 +27,20 @@ export default function DropdownUser({
       <DropdownMenuLabel className="p-0 font-normal">
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
           <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarImage alt={'omar'} src={avatar} />
+            <AvatarImage alt={'User'} />
             <AvatarFallback className="rounded-lg">CN</AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">{name}</span>
-            <span className="truncate text-xs">{email}</span>
+            <span className="truncate font-medium">omar</span>
+            <span className="truncate text-xs">omar@example.com</span>
           </div>
         </div>
       </DropdownMenuLabel>
-
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem disabled>
           <ShieldUser />
-          admin
+          Verified User
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
@@ -63,10 +55,7 @@ export default function DropdownUser({
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>
-        <LogOut />
-        Log out
-      </DropdownMenuItem>
+      <LogoutBtn />
     </DropdownMenuContent>
   );
 }
